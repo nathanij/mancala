@@ -14,8 +14,30 @@ class GameState:
     
     def swap_active(self):
         self.active_player = not self.active_player
+
+    def score_point(self):
+        self.scores[self.active_player] += 1
     
     # returns true if move is valid, false otherwise
-    def make_move(self, player, idx):
+    def make_move(self, idx):
         if idx < 0 or idx >= self.board_size:
             return False
+        stones = self.board[self.active_player][idx]
+        if stones == 0:
+            return False
+        self.board[self.active_player][idx] = 0
+        side = self.active_player
+        while stones > 0:
+            idx += 1
+            if idx == self.board_size:
+                if side == self.active_player:
+                    self.score_point()
+                    stones -= 1
+                side = not side
+                idx = -1
+            else:
+                self.board[side][idx] += 1
+                stones -= 1
+        if idx != -1:
+            self.swap_active()
+        return True
