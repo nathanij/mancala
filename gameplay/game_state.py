@@ -12,6 +12,9 @@ class GameState:
         opp = (player + 1) % 2
         return self.scores[player], self.scores[opp], self.board[player] + self.board[opp]
     
+    def is_active(self, player):
+        return player == self.active_player
+    
     def swap_active(self):
         self.active_player = not self.active_player
 
@@ -34,10 +37,10 @@ class GameState:
                     self.score_point()
                     stones -= 1
                 side = not side
-                idx = -1
+                idx = 0
             else:
                 self.board[side][idx] += 1
                 stones -= 1
-        if idx != -1:
+        if idx != 0 or side == self.active_player:
             self.swap_active()
         return True
