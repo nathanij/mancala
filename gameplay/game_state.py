@@ -2,10 +2,18 @@ class GameState:
     # boards run left to right, towards the active player's mancala
     # from framework of players 0 and 1 for ease of indexing
     def __init__(self, start_amt, board_size):
+        self.num_players = 0
         self.board_size = board_size
         self.board = [[start_amt] * board_size for _ in range(2)]
         self.scores = [0, 0]
         self.active_player = False
+
+    # assign player number if possible
+    def register_player(self):
+        if self.num_players < 2:
+            self.num_players += 1
+            return self.num_players - 1
+        return -1
 
     # returns the board state from the POV of the active player
     def get_state(self, player):
@@ -54,3 +62,5 @@ class GameState:
                 valid.append(i)
         return valid
     
+    def game_over(self):
+        return sum(x for y in self.board for x in y)

@@ -29,3 +29,9 @@ def test_make_move(subject):
 def test_get_valid_moves(subject):
     assert(subject.get_valid_moves(0) == subject.get_valid_moves(1))
     assert(subject.get_valid_moves(0) == [0,1,2,3,4,5])
+    assert(subject.make_move(0, 3))
+    assert(subject.get_valid_moves(0) == [0,1,2,4,5])
+    assert(subject.make_move(1, 0))
+    assert(subject.get_valid_moves(1) == [1,2,3,4,5])
+    assert(subject.make_move(0, 2))
+    assert(subject.get_valid_moves(0) == [0,1,3,4,5])
