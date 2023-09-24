@@ -10,8 +10,8 @@ class GameState:
     def finished(self):
         if sum(self.board_[0]) != 0 and sum(self.board_[1]) != 0:
             return False
-        self.scores_[0] += sum(self.board_[1])
-        self.scores_[1] += sum(self.board_[0])
+        self.scores_[0] += sum(self.board_[0])
+        self.scores_[1] += sum(self.board_[1])
         return True
 
     # returns which player is active to the driver
@@ -22,7 +22,7 @@ class GameState:
     def get_player_state(self, player):
         if player == 0:
             return (self.scores_, self.board_)
-        return (reversed(self.scores_), reversed(self.board_))
+        return (list(reversed(self.scores_)), list(reversed(self.board_)))
     
     def is_valid_move_(self, idx):
         if idx < 0 or idx >= self.board_size_:
@@ -30,14 +30,15 @@ class GameState:
         return self.board_[self.active_][idx] > 0
     
     def capture_(self, idx):
-        self.board_[self.active_][idx] += self.board_[not self.active_][idx]
-        self.board_[not self.active_][idx] = 0
+        oppo = self.board_size_ - idx - 1
+        self.board_[self.active_][idx] += self.board_[not self.active_][oppo]
+        self.board_[not self.active_][oppo] = 0
     
     # makes move inputted by runner
     def make_move(self, idx):
         if not self.is_valid_move_(idx):
             return False
-        stones = self.board[self.active_][idx]
+        stones = self.board_[self.active_][idx]
         self.board_[self.active_][idx] = 0
         side = self.active_
 
@@ -53,10 +54,10 @@ class GameState:
                 self.board_[side][idx] += 1
                 stones -= 1
 
-        if idx != -1:
-            self.active_ = not self.active_
-            if side == self.active_ and self.board_[side][idx] == 0:
+        if idx != self.board_size_:
+            if side == self.active_ and self.board_[side][idx] == 1:
                 self.capture_(idx)
+            self.active_ = not self.active_
         return True
     
     def outcome(self):
